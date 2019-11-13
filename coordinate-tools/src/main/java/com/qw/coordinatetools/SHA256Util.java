@@ -73,6 +73,7 @@ public class SHA256Util {
         stringObjectMap.put("time", time);
         String ss = getListFromInfo(stringObjectMap);
         //secret对应的值
+        System.out.println(time);
         System.out.println(Encrypt(ss));
     }
 

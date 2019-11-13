@@ -4,27 +4,33 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.geometry.Transformation2D;
+import com.qw.coordinatetools.gcs.GcsUtils;
+import com.qw.coordinatetools.pojo.GeometryDetail;
 import com.qw.coordinatetools.wkt.WktUtils;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TxtUtils {
     private static TxtParserFactory txtParserFactory = TxtParserFactory.getInstance();
 
     public static void main(String[] args) {
 
-        List<Geometry> list = txtParserFactory.getOperator(TxtOperator.Type.kcdj).txt2Geo(txt);
-        Geometry[] geometries = new Geometry[list.size()];
-        list.toArray(geometries);
-        Geometry geometry =  GeometryEngine.union(geometries,SpatialReference.create(4490));
-        Transformation2D transformation = new Transformation2D();
-        geometry.applyTransformation(transformation);
+        List<GeometryDetail> list = txtParserFactory.getOperator(TxtOperator.Type.kcdj).txt2Geo(txt2);
+        List<Geometry> geometries = list.stream().map(geometryDetail -> geometryDetail.getGeometry()).collect(Collectors.toList());
+        Geometry geometry =  GeometryEngine.union(geometries.toArray(new Geometry[geometries.size()]),null);
         WktUtils wktUtils = new WktUtils();
+       // int tyWkid = (int) (4528 + Math.floor((x - 118.5) / 3));
+        int txtWkid = list.get(0).getWkid();
+        geometry = GcsUtils.convertSR(geometry,"EPSG:"+txtWkid,"EPSG:4490");
+
         String wkt = wktUtils.geo2WktStr(geometry);
+        System.out.println(geometry.calculateArea2D());;
         System.out.println(wkt);
 
     }
-    private  static String txt = "[属性描述]\n" +
+    private  static String txt2 ="[属性描述]\n" +
             "格式版本号=1.01版本\n" +
             "数据产生单位=浙江华东建设工程有限公司\n" +
             "数据产生日期=2019-4-19\n" +

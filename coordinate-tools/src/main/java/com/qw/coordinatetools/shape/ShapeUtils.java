@@ -43,7 +43,7 @@ public class ShapeUtils {
     public static void main(String[] args) throws IOException {
         ShapeUtils utils = new ShapeUtils();
         ByteBuffer shapeByteBuffer = null ;
-        File shapeFile = new File("C:\\Users\\qiuwei\\Desktop\\长兴压覆SHP图形\\KQ.dbf");
+        File shapeFile = new File("C:\\Program Files (x86)\\ArcGIS SDKs\\java10.2.4\\sdk\\samples\\data\\shapefiles\\Coasts.shp");
         FileInputStream in = new FileInputStream(shapeFile);
         FileChannel channel = in.getChannel();
         shapeByteBuffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());

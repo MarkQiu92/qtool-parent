@@ -7,6 +7,7 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.qw.coordinatetools.CoordUtils;
+import com.qw.coordinatetools.pojo.GeometryDetail;
 import com.qw.coordinatetools.txt.TxtOperator;
 import com.qw.coordinatetools.wkt.WktUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -51,10 +52,11 @@ public class TxtKcdjOperator implements TxtOperator {
     Log log = LogFactory.getCurrentLogFactory().getLog(TxtKcdjOperator.class);
 
     @Override
-    public List<Geometry> txt2Geo(String txt) {
+    public List<GeometryDetail> txt2Geo(String txt) {
         log.debug("获取到的txt界址点：{}", txt);
         BufferedReader bufferedReader = null;
-        List<Geometry> list = new ArrayList<>();
+        List<GeometryDetail> list = new ArrayList<>();
+        int wkid=0; //
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(txt.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
             String lineStr;
@@ -68,7 +70,8 @@ public class TxtKcdjOperator implements TxtOperator {
                     System.out.println(vList.get(0));
                 } else if (lineStr.startsWith("带号=")) {
                     List<String> vList = ReUtil.findAll("(?<==).+", lineStr, 0);
-                    System.out.println(vList.get(0));
+                    String zone = vList.get(0);
+                    wkid = 4528 + (40 - Integer.valueOf(zone));
                 } else if (lineStr.startsWith("[地块坐标]")) {
                     log.debug("解析完属性信息");
                     break;
@@ -78,9 +81,10 @@ public class TxtKcdjOperator implements TxtOperator {
             while ((lineStr = bufferedReader.readLine()) != null) {
                 String[] sxs = lineStr.split(",");
                 int gs = Integer.valueOf(sxs[0]);
-                log.debug("开始解析地块: {},地块为： {} 点位个数为{}", sxs[3], sxs[4],gs);
+                log.debug("开始解析地块: {},地块为： {} 点位个数为{}", sxs[3], sxs[4], gs);
                 String currentqh = null;//当前圈号
                 Polygon polygon = new Polygon();
+
                 for (int i = 0; i < gs; i++) {
                     String[] zbcs;
                     try {
@@ -93,8 +97,8 @@ public class TxtKcdjOperator implements TxtOperator {
                     String dh = zbcs[0]; //点号
                     String qh = zbcs[1]; //地块圈号
                     //首条坐标设置初始化圈号
-                    double x = Double.valueOf(zbcs[2]);
-                    double y = Double.valueOf(zbcs[3]);
+                    double y = Double.valueOf(zbcs[2]);
+                    double x = Double.valueOf(zbcs[3]);
                     //第一个点
                     if (i == 0) {
                         currentqh = qh;
@@ -110,7 +114,10 @@ public class TxtKcdjOperator implements TxtOperator {
                         }
                     }
                 }
-                list.add(polygon);
+                GeometryDetail detail = new GeometryDetail();
+                detail.setGeometry(polygon);
+                detail.setWkid(wkid);
+                list.add(detail);
             }
         } catch (Exception e) {
             e.printStackTrace();
