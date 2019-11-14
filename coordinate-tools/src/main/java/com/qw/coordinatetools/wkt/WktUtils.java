@@ -36,7 +36,7 @@ public class WktUtils {
 
     public static void main(String[] args) {
         WktUtils wktUtils = new WktUtils();
-        String wkt = "POLYGON((121.4268 28.6688,121.4263 28.6692,121.4269 28.6695,121.4272 28.6693,121.4272 28.6691,121.4268 28.6688))";
+        String wkt = "POLYGON((120.428 29.0596,120.4297 29.0563, 120.4242 29.0546,120.428 29.0596))";
         Geometry geometry = wktUtils.wktStr2Geo(wkt);
         System.out.println(geometry.getType());
         String wktN = wktUtils.geo2WktStr(geometry);
