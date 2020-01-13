@@ -35,7 +35,15 @@ public class GcsUtils {
             e.printStackTrace();
             throw new RuntimeException("坐标转换失败");
         }
-
     }
 
+    /**
+     *  投影到对应带号
+     * @param source
+     * @return
+     */
+    public  static Geometry projection(Geometry source){
+        Geometry tyGeo = null;
+        return tyGeo;
+    }
 }

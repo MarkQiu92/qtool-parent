@@ -1,6 +1,5 @@
 package com.qw.coordinatetools.txt;
 
-import com.esri.core.geometry.Operator;
 import com.qw.coordinatetools.txt.operatorImp.TxtKcdjOperator;
 
 import java.util.HashMap;

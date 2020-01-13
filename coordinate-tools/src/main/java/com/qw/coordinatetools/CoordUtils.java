@@ -16,4 +16,9 @@ public class CoordUtils {
     public WktUtils getWktUtils() {
         return wktUtils;
     }
+
+    public String cover(String sourceType, String targetType, String coord) {
+        return null;
+    }
+
 }
