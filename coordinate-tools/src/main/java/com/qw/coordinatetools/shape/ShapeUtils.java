@@ -1,11 +1,11 @@
 package com.qw.coordinatetools.shape;
 
 import cn.hutool.core.io.IoUtil;
-import com.esri.core.geometry.*;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -17,8 +17,10 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * wkt 格式工具类
@@ -26,83 +28,51 @@ import java.util.Iterator;
  * @author qiuwei
  */
 public class ShapeUtils {
-    private OperatorImportFromESRIShape operatorImportFromESRIShape = OperatorImportFromESRIShape.local();
-    private OperatorExportToESRIShape operatorExportToESRIShape = OperatorExportToESRIShape.local();
 
-    /**
-     * geometry转wkt
-     *
-     * @param geometry
-     * @return
-     */
-    public String  geo2Shape(Geometry geometry) {
-       // return operatorExportToESRIShape.execute(WktImportFlags.wktImportDefaults, geometry, null);
-        return  null;
-    }
-
-    /**
-     * geometry转wkt
-     *
-     * @param shapeByteBuffer
-     * @return
-     */
-    public Geometry shape2Geo(ByteBuffer shapeByteBuffer) {
-        return operatorImportFromESRIShape.execute(ShapeImportFlags.ShapeImportDefaults,Geometry.Type.Unknown,shapeByteBuffer);
-    }
 
     public static void main(String[] args) throws IOException {
         ShapeUtils utils = new ShapeUtils();
-         File shapeFile = new File("C:\\Users\\qiuwei\\Desktop\\长兴压覆SHP图形\\BMD.shp");
-        FileInputStream in = new FileInputStream(shapeFile);
-        ByteBuffer byteBuffer = ByteBuffer.wrap(toByteArray(in));
-        //Geometry geometry = GeometryEngine.geometryFromEsriShape(toByteArray(in),Geometry.Type.Unknown);
-        utils.shape2Geo("C:\\Users\\qiuwei\\Desktop\\长兴压覆SHP图形\\BMD.shp");
-       // System.out.println(geometry.getType());
+        List<String> str = utils.simpleShape2WKtList("d:\\tmp\\BMD.shp");
+        System.out.println(str);
 
     }
-    public void shape2Geo(String path){
+
+    /**
+     * 返回shape的所有图形集合
+     *
+     * @param path 文件路径
+     */
+    public List<String> simpleShape2WKtList(String path) {
+        FeatureCollection<SimpleFeatureType, SimpleFeature> result =  shape2geo_geoTools(path);
+        if (result==null){
+            return null;
+        }
+        FeatureIterator<SimpleFeature> iterator = result.features();
+        List<String> wktList = new ArrayList<>();
+        while (iterator.hasNext()){
+            SimpleFeature feature = iterator.next();
+            Object o =feature.getDefaultGeometryProperty().getValue();
+            wktList.add(o.toString());
+        }
+        return wktList;
+    }
+
+    private FeatureCollection<SimpleFeatureType, SimpleFeature> shape2geo_geoTools(String path) {
         ShapefileDataStore shpDataStore = null;
-        try{
+        List<Geometry> geometryList = new ArrayList<>();
+        FeatureCollection<SimpleFeatureType, SimpleFeature> result = null;
+        try {
             shpDataStore = new ShapefileDataStore(new File(path).toURI().toURL());
             shpDataStore.setCharset(Charset.forName("GBK"));
             String typeName = shpDataStore.getTypeNames()[0];
             FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = null;
-            featureSource = (FeatureSource<SimpleFeatureType, SimpleFeature>)shpDataStore.getFeatureSource(typeName);
-            FeatureCollection<SimpleFeatureType, SimpleFeature> result = featureSource.getFeatures();
-            System.out.println(result.size());
-            FeatureIterator<SimpleFeature> itertor = result.features();
-            while(itertor.hasNext()){
-                SimpleFeature feature = itertor.next();
-                Collection<Property> p = feature.getProperties();
-                Iterator<Property> it = p.iterator();
-                while(it.hasNext()) {
-                    Property pro = it.next();
-                    if (pro.getValue() instanceof Point) {
-                        System.out.println("PointX = " + ((Point)(pro.getValue())).getX());
-                        System.out.println("PointY = " + ((Point)(pro.getValue())).getY());
-                    } else {
-                        System.out.println(pro.getName() + " = " + pro.getValue());
-                    }
-                }
-            }
-            itertor.close();
-        } catch (MalformedURLException e) {
+            featureSource = (FeatureSource<SimpleFeatureType, SimpleFeature>) shpDataStore.getFeatureSource(typeName);
+            result = featureSource.getFeatures();
+
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch(IOException e) { e.printStackTrace(); }
-
-
-}
-
-
-
-
-    public static byte[] toByteArray(InputStream in) throws IOException {
-        ByteArrayOutputStream out=new ByteArrayOutputStream();
-        byte[] buffer=new byte[1024*4];
-        int n=0;
-        while ( (n=in.read(buffer)) !=-1) {
-            out.write(buffer,0,n);
         }
-        return out.toByteArray();
+        return result;
     }
+
 }

@@ -21,11 +21,15 @@ import org.opengis.referencing.operation.MathTransform;
 public class GcsUtils {
 
     public static Geometry convertSR(Geometry source, String sourceSR, String destSR) {
+            String wkt = GeometryEngine.geometryToWkt(source, 0);
+            return convertSR(wkt,sourceSR,destSR);
+    }
+
+    public static Geometry convertSR(String wkt, String sourceSR, String destSR) {
         try {
             CoordinateReferenceSystem crsSource = CRS.decode(sourceSR);
             CoordinateReferenceSystem crsTarget = CRS.decode(destSR);
             MathTransform transform = CRS.findMathTransform(crsSource, crsTarget);
-            String wkt = GeometryEngine.geometryToWkt(source, 0);
             GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
             WKTReader reader = new WKTReader(geometryFactory);
             org.locationtech.jts.geom.Geometry geometry = reader.read(wkt);
