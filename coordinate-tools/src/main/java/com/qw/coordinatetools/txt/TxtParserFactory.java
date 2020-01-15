@@ -1,6 +1,7 @@
 package com.qw.coordinatetools.txt;
 
 import com.qw.coordinatetools.txt.operatorImp.TxtKcdjOperator;
+import com.qw.coordinatetools.txt.operatorImp.TxtNzyOperator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ public class TxtParserFactory {
 
     static {
         st_supportedOperators.put(TxtOperator.Type.kcdj, new TxtKcdjOperator());
+        st_supportedOperators.put(TxtOperator.Type.stnzy, new TxtNzyOperator());
     }
 
     public TxtOperator getOperator(TxtOperator.Type type) {

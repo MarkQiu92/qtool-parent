@@ -13,7 +13,8 @@ public interface TxtOperator {
      */
     enum Type {
         //勘测定界界址点坐标交换格式
-        kcdj
+        kcdj,
+        stnzy
     }
 
     /**
