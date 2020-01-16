@@ -23,7 +23,10 @@ public class TxtUtils {
         return list;
     }
 
+    public static  Geometry  sigletxt2Geo (String txt, String fgf, int tghs, int xls, int yls){
+        return   txtParserFactory.getOperator(TxtOperator.Type.commonOperator).commonSigleReader(txt,fgf,tghs,xls,yls);
 
+    }
 
     public static String getCode(String path) throws Exception {
         InputStream inputStream = new FileInputStream(path);

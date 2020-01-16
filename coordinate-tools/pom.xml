@@ -11,6 +11,7 @@
     <groupId>com.qw</groupId>
     <artifactId>coordinate-tools</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <!--<version>1.0.0</version>-->
     <name>coordinate-tools</name>
     <description>坐标工具类</description>
 
