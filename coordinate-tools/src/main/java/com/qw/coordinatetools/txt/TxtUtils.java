@@ -2,13 +2,10 @@ package com.qw.coordinatetools.txt;
 
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
-import com.esri.core.geometry.SpatialReference;
-import com.esri.core.geometry.Transformation2D;
 import com.qw.coordinatetools.gcs.GcsUtils;
 import com.qw.coordinatetools.pojo.GeometryDetail;
 import com.qw.coordinatetools.wkt.WktUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
