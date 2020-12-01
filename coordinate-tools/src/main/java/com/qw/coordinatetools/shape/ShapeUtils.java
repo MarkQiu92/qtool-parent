@@ -22,6 +22,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.io.WKTReader;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
@@ -47,15 +48,18 @@ public class ShapeUtils {
 
     public static void main(String[] args) throws IOException {
         ShapeUtils utils = new ShapeUtils();
-       /* List<String> str = utils.simpleShape2WKtList("C:\\Users\\qiuwei\\Desktop\\1\\宗地2\\sde.st_zd.shp");
-         System.out.println(str.size());*/
+     /*   List<String> str = utils.simpleShape2WKtList("C:\\Users\\qiuwei\\Desktop\\1\\快速路涉及永久基本农田\\快速路涉及永久基本农田.shp");
+        System.out.println(str);*/
         // System.out.println(str);
-        // utils.transShape("C:\\Users\\qiuwei\\Desktop\\1\\宗地\\sde.st_zd.shp","C:\\Users\\qiuwei\\Desktop\\1\\宗地2\\sde.st_zd.shp");
-        //utils.readDBF();
-        utils.transShape("C:\\Users\\qiuwei\\Desktop\\1\\宗地\\sde.st_zd.shp", "C:\\Users\\qiuwei\\Desktop\\1\\宗地2\\sde.st_zd.shp");
-        List<String> str = utils.simpleShape2WKtList("C:\\Users\\qiuwei\\Desktop\\1\\宗地2\\sde.st_zd.shp");
+        utils.transShape("C:\\Users\\qiuwei\\Desktop\\1\\需转换坐标数据20200313\\ZD_782.shp","C:\\Users\\qiuwei\\Desktop\\1\\需转换坐标数据20200313-2000\\ZD_782.shp");
+        List<String> str = utils.simpleShape2WKtList("C:\\Users\\qiuwei\\Desktop\\1\\需转换坐标数据20200313-2000\\ZD_782.shp");
         System.out.println(str.size());
         System.out.println(str.get(0));
+        //utils.readDBF();
+     /*   utils.transShape("C:\\Users\\qiuwei\\Desktop\\1\\需转换坐标数据\\杭州本地坐标数据\\KCDJM.shp", "C:\\Users\\qiuwei\\Desktop\\1\\需转换坐标数据\\杭州2000坐标数据\\KCDJM.shp");
+        List<String> str = utils.simpleShape2WKtList("C:\Users\qiuwei\Desktop\1\需转换坐标数据20200313-2000\ZD_782.shp");
+        System.out.println(str.size());
+        System.out.println(str.get(0));*/
     }
 
     public void readDBF() {
@@ -142,16 +146,16 @@ public class ShapeUtils {
                         String wkt = wktUtils.geo2WktStr(geometryCgcs2000);
                         org.locationtech.jts.geom.Geometry geometry2 = reader.read(wkt);
                         geometry2.setSRID(4490);
-                       try {
-                           Point point = geometry2.getInteriorPoint();
-                           if (point.getX() > 121) {
-                               System.out.println(wkt);
-                               System.out.println(point);
-                           }
-                       }catch (Exception e){
-                           System.out.println("报错的wkt"+wkt);
-                          // e.printStackTrace();
-                       }
+                        try {
+                            Point point = geometry2.getInteriorPoint();
+                            if (point.getX() > 121) {
+                                System.out.println(wkt);
+                                System.out.println(point);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("报错的wkt" + wkt);
+                            // e.printStackTrace();
+                        }
 
                         fNew.setDefaultGeometry(wkt);
                     } else {

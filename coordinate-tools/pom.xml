@@ -37,12 +37,13 @@
             <groupId>com.esri.geometry</groupId>
             <artifactId>esri-geometry-api</artifactId>
             <version>2.2.3</version>
+
         </dependency>
-   <!--     <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-shapefile</artifactId>
-            <version>20.0.chinese</version>
-        </dependency>-->
+        <!--     <dependency>
+                 <groupId>org.geotools</groupId>
+                 <artifactId>gt-shapefile</artifactId>
+                 <version>20.0.chinese</version>
+             </dependency>-->
         <dependency>
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts</artifactId>
@@ -69,6 +70,12 @@
             <artifactId>gt-epsg-wkt</artifactId>
             <version>${geotools.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.geotools/gt-opengis -->
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-opengis</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.geotools</groupId>
@@ -78,6 +85,11 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-shapefile</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-api</artifactId>
             <version>${geotools.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->

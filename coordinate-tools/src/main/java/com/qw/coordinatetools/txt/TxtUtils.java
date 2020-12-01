@@ -2,17 +2,70 @@ package com.qw.coordinatetools.txt;
 
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.SpatialReference;
+import com.esri.core.geometry.Transformation2D;
 import com.qw.coordinatetools.gcs.GcsUtils;
 import com.qw.coordinatetools.pojo.GeometryDetail;
 import com.qw.coordinatetools.wkt.WktUtils;
 
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TxtUtils {
     private static TxtParserFactory txtParserFactory = TxtParserFactory.getInstance();
 
-    public static void main(String[] args) {
+
+    public static  List<GeometryDetail>  txt2Geo(String txt,TxtOperator.Type type){
+        List<GeometryDetail> list =   txtParserFactory.getOperator(type).txt2Geo(txt);
+        return list;
+    }
+
+    public static  Geometry  sigletxt2Geo (String txt, String fgf, int tghs, int xls, int yls){
+        return   txtParserFactory.getOperator(TxtOperator.Type.commonOperator).commonSigleReader(txt,fgf,tghs,xls,yls);
+
+    }
+
+    public static String getCode(String path) throws Exception {
+        InputStream inputStream = new FileInputStream(path);
+        byte[] head = new byte[3];
+        inputStream.read(head);
+        String code = "gb2312";  //或GBK
+        if (head[0] == -1 && head[1] == -2 )
+            code = "UTF-16";
+        else if (head[0] == -2 && head[1] == -1 )
+            code = "Unicode";
+        else if(head[0]==-17 && head[1]==-69 && head[2] ==-65)
+            code = "UTF-8";
+        inputStream.close();
+        return code;
+    }
+
+    /**
+     * 根据txt的字符进行读取，解决乱码为题
+     * @param file
+     * @return
+     */
+    private static String txt2String(File file){
+        StringBuilder result = new StringBuilder();
+        try{
+            InputStreamReader isr = new InputStreamReader(new FileInputStream(file), Charset.forName(getCode(file.getAbsolutePath())));
+            BufferedReader br = new BufferedReader(isr);//构造一个BufferedReader类来读取文件
+            String s = null;
+            while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                result.append(System.lineSeparator()+s);
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+
+
+   /* public static void main(String[] args) {
 
         List<GeometryDetail> list = txtParserFactory.getOperator(TxtOperator.Type.kcdj).txt2Geo(txt2);
         List<Geometry> geometries = list.stream().map(geometryDetail -> geometryDetail.getGeometry()).collect(Collectors.toList());
@@ -26,8 +79,9 @@ public class TxtUtils {
         System.out.println(geometry.calculateArea2D());;
         System.out.println(wkt);
 
-    }
-    private  static String txt2 ="[属性描述]\n" +
+    }*/
+
+   /* private  static String txt2 ="[属性描述]\n" +
             "格式版本号=1.01版本\n" +
             "数据产生单位=浙江华东建设工程有限公司\n" +
             "数据产生日期=2019-4-19\n" +
@@ -105,6 +159,6 @@ public class TxtUtils {
             "J63,1,3353195.384,40520992.996\n" +
             "J64,1,3353192.887,40520991.261\n" +
             "J65,1,3353190.790,40520989.058\n" +
-            "J01,1,3353189.181,40520986.477";
+            "J01,1,3353189.181,40520986.477";*/
 
 }
